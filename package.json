@@ -1,0 +1,30 @@
+{
+  "name": "events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "debug": "cross-env PORT=3000 nodemon --legacy-watch --inspect=0.0.0.0:9229 --nolazy src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OmerDob/events.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OmerDob/events/issues"
+  },
+  "homepage": "https://github.com/OmerDob/events#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.53",
+    "cross-env": "^5.1.1",
+    "nodemon": "^1.12.1"
+  }
+}
