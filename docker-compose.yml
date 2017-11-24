@@ -5,7 +5,12 @@ services:
   command: npm run debug
   volumes:
    - ./src:/app/src
+   - ./config:/app/config
    - ./node_modules:/app/node_modules
   ports:
    - "3000:3000"
    - "9229:9229"
+  stdin_open: true
+  tty: true
+ mongo:
+  image: mongo
