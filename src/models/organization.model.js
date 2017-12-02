@@ -9,11 +9,28 @@ const organizationSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            maxlength: 100
+            maxlength: 100,
+            validate: {
+                validator: async function (name) {
+                    let organization = await Organization.findOne({name});
+
+                    if (organization && organization.id != this.id) {
+                        return false;
+                    }
+
+                    return true;
+                },
+                message: 'Organization with the name "{VALUE}" already exists.'
+            }
         },
         creationDate: {
             type: Date,
-            default: Date.now()
+            default: Date.now(),
+            required: true
+        },
+        description: {
+            type: String,
+            maxlength: 500
         }
     },
     {
@@ -36,4 +53,4 @@ organizationSchema.plugin(mongooseDelete, {
 
 organizationSchema.path('deleted').select(false);
 
-mongoose.model('Organization', organizationSchema);
+const Organization = mongoose.model('Organization', organizationSchema);
