@@ -1,32 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 
+const requestLogger = require('./middlewares/requestLogger.middleware');
+const healthCheck = require('./middlewares/healthCheck.middleware');
+const errorHandler = require('./middlewares/errorHandler.middleware');
+
+const loadModels = require('./loadModels');
+const loadRouters = require('./loadRouters');
 const initDb = require('./initDb');
 
 const app = express();
 
 app.use(bodyParser.json({extended: true}));
+app.use(requestLogger);
 
-app.use((req, res, next) => {
-    console.log(`${Date.now()} - ${req.originalUrl} requested`);
-    next();
-});
+loadModels();
+loadRouters(app);
 
-app.get('/health', (req, res) => {
-    res
-        .status(200)
-        .json({
-            mongoose: mongoose.connection.readyState
-        })
-        .end();
-});
+app.get('/health', healthCheck);
 
-app.use('/', (req, res) => {
-    res.send('hello world!');
-});
+app.use(errorHandler);
 
-initDb()
-    .then(() => {
-        app.listen(process.env.PORT, () => console.log(`Service is running on port ${process.env.PORT}`));
-    });
+const onAppStart = () => console.log(`Service is running on port ${process.env.PORT}`);
+
+initDb().then(() => app.listen(process.env.PORT, onAppStart));

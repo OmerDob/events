@@ -15,8 +15,8 @@ module.exports = () => {
     });
 
     process
-        .on('SIGINT', mongoose.connection.close)
-        .on('SIGTERM', mongoose.connection.close);
+        .on('SIGINT', () => mongoose.connection.close())
+        .on('SIGTERM', () => mongoose.connection.close());
 
     return mongoose.connect(config.get('connectionString'));
 };
