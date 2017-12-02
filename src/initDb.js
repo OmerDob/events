@@ -1,22 +1,25 @@
 const mongoose = require('mongoose');
 const config = require('config');
+const logger = require('./utils/logger');
 
 module.exports = () => {
+    mongoose.Promise = Promise;
+
     mongoose.connection.on('connected', () => {
-        console.log('mongoose connected succesfully');
+        logger.info('mongoose connected succesfully');
     });
 
     mongoose.connection.on('error', () => {
-        console.error('mongoose failed to connect');
+        logger.info('mongoose failed to connect');
     });
 
     mongoose.connection.on('disconnected', () => {
-        console.log('mongoose connection closed');
+        logger.info('mongoose connection closed');
     });
 
     process
         .on('SIGINT', () => mongoose.connection.close())
         .on('SIGTERM', () => mongoose.connection.close());
 
-    return mongoose.connect(config.get('connectionString'));
+    return mongoose.connect(config.get('connectionString'), {useMongoClient: true});
 };

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const extractProps = require('../extractProps');
-const {EventsErrorResourceNotFound} = require('../eventsErrors');
+const extractProps = require('../utils/extractProps');
+const {EventsErrorResourceNotFound} = require('../utils/eventsErrors');
 
 const Organization = mongoose.model('Organization');
 

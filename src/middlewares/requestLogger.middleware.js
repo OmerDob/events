@@ -1,5 +1,6 @@
 const uuid = require('uuid-lib');
 const Performance = require('performance-node');
+const logger = require('../utils/logger');
 
 const timeline = new Performance();
 
@@ -10,7 +11,7 @@ module.exports = (req, res, next) => {
 
     timeline.mark(reqStartLabel);
 
-    console.log(`${timeline.now()} - ${req.method} ${req.originalUrl} requested (${reqUuid})`);
+    logger.info(`${req.method} ${req.originalUrl} requested (${reqUuid})`);
 
     res.on('finish', () => {
         timeline.mark(reqEndLabel);
@@ -18,7 +19,7 @@ module.exports = (req, res, next) => {
 
         let reqMeasures = timeline.getEntriesByName(reqUuid)[0];
 
-        console.log(`${timeline.now()} - request ${reqUuid} ended (${reqMeasures.duration})`);
+        logger.info(`request ${reqUuid} ended (${reqMeasures.duration})`);
     });
 
     next();

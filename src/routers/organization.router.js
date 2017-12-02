@@ -1,6 +1,6 @@
 const express = require('express');
 const organizationCrud = require('../cruds/organization.crud');
-const catchAsyncErrors = require('../catchAsyncErrors');
+const catchAsyncErrors = require('../utils/catchAsyncErrors');
 
 const organizationRouter = express.Router();
 

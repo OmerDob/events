@@ -1,3 +1,9 @@
 {
-    "connectionString": "mongodb://mongo/events"
+    "connectionString": "mongodb://mongo/events",
+    "loggers": {
+        "Console": {
+            "timestamp": true,
+            "colorize": true
+        }
+    }
 }

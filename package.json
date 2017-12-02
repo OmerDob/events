@@ -26,7 +26,8 @@
     "mongoose": "^4.13.4",
     "mongoose-delete": "^0.4.0",
     "performance-node": "^0.2.0",
-    "uuid-lib": "0.0.6"
+    "uuid-lib": "0.0.6",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "cross-env": "^5.1.1",

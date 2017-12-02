@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const logger = require('./utils/logger');
 
 const requestLogger = require('./middlewares/requestLogger.middleware');
 const healthCheck = require('./middlewares/healthCheck.middleware');
@@ -21,6 +22,6 @@ app.get('/health', healthCheck);
 
 app.use(errorHandler);
 
-const onAppStart = () => console.log(`Service is running on port ${process.env.PORT}`);
+const onAppStart = () => logger.info(`Service is running on port ${process.env.PORT}`);
 
 initDb().then(() => app.listen(process.env.PORT, onAppStart));
