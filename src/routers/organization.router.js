@@ -3,8 +3,10 @@ const eventRouter = require('./event.router');
 const organizationCrud = require('../cruds/organization.crud');
 const catchErrors = require('../utils/catchErrors');
 const extractProps = require('../utils/extractProps');
+const bodyExtractor = require('../middlewares/bodyExtractor.middleware');
 
 const organizationRouter = express.Router();
+const extractOrganizationData = bodyExtractor('organizationData', ['name', 'description']);
 
 organizationRouter.param('id', catchErrors.async(async (req, res, next, organizationId) => {
     req.organization = await organizationCrud.getById(organizationId);
@@ -30,26 +32,31 @@ organizationRouter.get('/:id', ({organization}, res) => {
         .end();
 });
 
-organizationRouter.post('/', catchErrors.async(async ({body}, res) => {
-    let organizationData = extractOrganizationData(body.data);
-    let newOrganization = await organizationCrud.create(organizationData);
+organizationRouter.post(
+    '/',
+    extractOrganizationData,
+    catchErrors.async(async ({organizationData}, res) => {
+        let newOrganization = await organizationCrud.create(organizationData);
 
-    res
-        .status(201)
-        .json(newOrganization)
-        .end();
-}));
+        res
+            .status(201)
+            .json(newOrganization)
+            .end();
+    })
+);
 
-organizationRouter.patch('/:id', catchErrors.async(async ({organization, body}, res) => {
-    let organizationData = extractOrganizationData(body.data);
+organizationRouter.patch(
+    '/:id',
+    extractOrganizationData,
+    catchErrors.async(async ({organization, organizationData}, res) => {
+        await organizationCrud.update(organization, organizationData);
 
-    await organizationCrud.update(organization, organizationData);
-
-    res
-        .status(200)
-        .json(organization)
-        .end();
-}));
+        res
+            .status(200)
+            .json(organization)
+            .end();
+    })
+);
 
 organizationRouter.delete('/:id', catchErrors.async(async ({organization}, res) => {
     await organization.delete();
@@ -58,7 +65,5 @@ organizationRouter.delete('/:id', catchErrors.async(async ({organization}, res) 
         .status(204)
         .end();
 }));
-
-const extractOrganizationData = data => extractProps(data, ['name', 'description']);
 
 module.exports = organizationRouter;
