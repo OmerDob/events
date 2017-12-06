@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const mongooseDelete = require('mongoose-delete');
+const eventSchema = require('./event.schema');
+const removeJsonFields = require('./plugins/removeJsonFields.plugin');
 
 const Schema = mongoose.Schema;
 
@@ -31,26 +32,21 @@ const organizationSchema = new Schema(
         description: {
             type: String,
             maxlength: 500
+        },
+        events: {
+            type: [eventSchema],
+            populate: false
         }
     },
     {
+        softDelete: true,
         toJSON: {
             getters: true,
-            versionKey: false,
-            transform: (doc, ret) => {
-                delete ret._id;
-
-                return ret;
-            }
+            versionKey: false
         }
     }
 );
 
-organizationSchema.plugin(mongooseDelete, {
-    overrideMethods: true,
-    validateBeforeDelete: false
-});
-
-organizationSchema.path('deleted').select(false);
+organizationSchema.plugin(removeJsonFields, ['_id', 'deleted']);
 
 const Organization = mongoose.model('Organization', organizationSchema);

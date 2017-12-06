@@ -1,4 +1,4 @@
-module.exports = (obj, props) => {
+module.exports = (obj = {}, props = []) => {
     const addKeyToRes = (res, key) => {
         return obj.hasOwnProperty(key) ?
             {...res, [key]: obj[key]} :
