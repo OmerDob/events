@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
-    "debug": "cross-env PORT=3000 nodemon --inspect=0.0.0.0:9229 --nolazy src/app.js",
+    "debug": "cross-env PORT=3000 nodemon --inspect=0.0.0.0:9229 --nolazy --require ./gracefulNodemonExit src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +24,6 @@
     "config": "^1.28.1",
     "express": "^4.16.2",
     "mongoose": "^4.13.4",
-    "mongoose-delete": "^0.4.0",
     "performance-node": "^0.2.0",
     "uuid-lib": "0.0.6",
     "winston": "^2.4.0"
