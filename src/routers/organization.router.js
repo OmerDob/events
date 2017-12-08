@@ -2,7 +2,6 @@ const express = require('express');
 const eventRouter = require('./event.router');
 const organizationCrud = require('../cruds/organization.crud');
 const catchErrors = require('../utils/catchErrors');
-const extractProps = require('../utils/extractProps');
 const bodyExtractor = require('../middlewares/bodyExtractor.middleware');
 
 const organizationRouter = express.Router();

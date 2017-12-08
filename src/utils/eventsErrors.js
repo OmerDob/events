@@ -1,11 +1,24 @@
-class EventsErrorBase extends Error {
+class EventsError extends Error {
+    constructor(message) {
+        if (new.target == EventsError) {
+            throw new TypeError('Cannot construct abstract `EventsError` instance directly.');
+        }
+
+        super(message);
+    }
+    get status() {
+        throw new TypeError('Must override `status` getter.');
+    }
+}
+
+class GeneralEventsError extends EventsError {
     constructor({
-        status = EventsErrorBase.defaultStatus,
-        message = EventsErrorBase.defaultMessage
+        status = GeneralEventsError.defaultStatus,
+        message = GeneralEventsError.defaultMessage
     } = {}) {
         super(message);
 
-        this.status = status;
+        this._status = status;
     }
     static get defaultStatus() {
         return 500;
@@ -13,24 +26,38 @@ class EventsErrorBase extends Error {
     static get defaultMessage() {
         return 'Unspecified error occured.';
     }
+    get status() {
+        return this._status;
+    }
 }
 
-class EventsErrorResourceNotFound extends EventsErrorBase {
-    constructor({
-        status = EventsErrorResourceNotFound.defaultStatus,
-        message = EventsErrorResourceNotFound.defaultMessage
-    } = {}) {
-        super({status, message});
-    }
-    static get defaultStatus() {
-        return 404;
+class ResourceNotFoundEventsError extends EventsError {
+    constructor(message = ResourceNotFoundEventsError.defaultMessage) {
+        super(message);
     }
     static get defaultMessage() {
         return 'Resource not found.';
     }
+    get status() {
+        return 404;
+    }
+}
+
+class BadRequestEventsError extends EventsError {
+    constructor(message = BadRequestEventsError.defaultMessage) {
+        super(message);
+    }
+    static get defaultMessage() {
+        return 'Bad request.';
+    }
+    get status() {
+        return 400;
+    }
 }
 
 module.exports = {
-    EventsErrorBase,
-    EventsErrorResourceNotFound
+    EventsError,
+    GeneralEventsError,
+    BadRequestEventsError,
+    ResourceNotFoundEventsError
 };

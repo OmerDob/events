@@ -1,14 +1,12 @@
 const organizationCrud = require('./organization.crud');
 const validateModel = require('../utils/validateModel');
-const {EventsErrorResourceNotFound} = require('../utils/eventsErrors');
+const {ResourceNotFoundEventsError} = require('../utils/eventsErrors');
 
 const getById = (organization, eventId) => {
     let event = organization.events.id(eventId);
 
     if (!event) {
-        throw new EventsErrorResourceNotFound({
-            message: `Event with id ${eventId} not found for organization with id ${organization.id}.`
-        });
+        throw new ResourceNotFoundEventsError(`Event with id ${eventId} not found for organization with id ${organization.id}.`);
     }
 
     return event;

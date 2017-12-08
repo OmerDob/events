@@ -1,9 +1,16 @@
 const express = require('express');
 const eventCrud = require('../cruds/event.crud');
 const catchErrors = require('../utils/catchErrors');
-const extractProps = require('../utils/extractProps');
+const bodyExtractor = require('../middlewares/bodyExtractor.middleware');
 
 const eventRouter = express.Router();
+const extractEventData = bodyExtractor('eventData', [
+    'name',
+    'description',
+    'startDate',
+    'endDate',
+    'location'
+]);
 
 eventRouter.param('id', catchErrors((req, res, next, eventId) => {
     req.event = eventCrud.getById(req.organization, eventId);
@@ -25,26 +32,31 @@ eventRouter.get('/:id', ({event}, res) => {
         .end();
 });
 
-eventRouter.post('/', catchErrors.async(async ({organization, body}, res) => {
-    let eventData = extractEventData(body.data);
-    let event = await eventCrud.create(organization, eventData);
+eventRouter.post(
+    '/',
+    extractEventData,
+    catchErrors.async(async ({organization, eventData}, res) => {
+        let event = await eventCrud.create(organization, eventData);
 
-    res
-        .status(200)
-        .json(event)
-        .end();
-}));
+        res
+            .status(200)
+            .json(event)
+            .end();
+    })
+);
 
-eventRouter.patch('/:id', catchErrors.async(async ({event, body}, res) => {
-    let eventData = extractEventData(body.data);
+eventRouter.patch(
+    '/:id',
+    extractEventData,
+    catchErrors.async(async ({event, eventData}, res) => {
+        await eventCrud.update(event, eventData);
 
-    await eventCrud.update(event, eventData);
-
-    res
-        .status(200)
-        .json(event)
-        .end();
-}));
+        res
+            .status(200)
+            .json(event)
+            .end();
+    })
+);
 
 eventRouter.delete('/:id', catchErrors.async(async ({event}, res) => {
     await event.delete();
@@ -53,13 +65,5 @@ eventRouter.delete('/:id', catchErrors.async(async ({event}, res) => {
         .status(204)
         .end();
 }));
-
-const extractEventData = data => extractProps(data, [
-    'name',
-    'description',
-    'startDate',
-    'endDate',
-    'location'
-]);
 
 module.exports = eventRouter;

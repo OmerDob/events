@@ -1,8 +1,15 @@
 const mongoose = require('mongoose');
 const config = require('config');
 const logger = require('./utils/logger');
+const {GeneralEventsError} = require('./utils/eventsErrors');
 
 module.exports = () => {
+    if (!config.has('connectionString')) {
+        throw new GeneralEventsError({
+            message: 'No connection string found.'
+        });
+    }
+    
     mongoose.Promise = Promise;
 
     mongoose.connection.on('connected', () => {

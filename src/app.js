@@ -4,6 +4,7 @@ const logger = require('./utils/logger');
 
 const requestLogger = require('./middlewares/requestLogger.middleware');
 const healthCheck = require('./middlewares/healthCheck.middleware');
+const actionNotFound = require('./middlewares/actionNotFound.middleware');
 const errorHandler = require('./middlewares/errorHandler.middleware');
 
 const loadModels = require('./loadModels');
@@ -20,6 +21,7 @@ loadRouters(app);
 
 app.get('/health', healthCheck);
 
+app.use(actionNotFound);
 app.use(errorHandler);
 
 const onAppStart = () => logger.info(`Service is running on port ${process.env.PORT}`);

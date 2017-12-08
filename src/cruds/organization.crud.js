@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validateModel = require('../utils/validateModel');
-const {EventsErrorResourceNotFound} = require('../utils/eventsErrors');
+const {ResourceNotFoundEventsError} = require('../utils/eventsErrors');
 
 const Organization = mongoose.model('Organization');
 
@@ -10,7 +10,7 @@ const getById = async organizationId => {
     let organization = await Organization.findById(organizationId);
     
     if (!organization) {
-        throw new EventsErrorResourceNotFound({message: `Organization with id ${organizationId} not found.`});
+        throw new ResourceNotFoundEventsError(`Organization with id ${organizationId} not found.`);
     }
 
     return organization;

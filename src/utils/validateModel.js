@@ -1,4 +1,4 @@
-const {EventsErrorBase} = require('./eventsErrors');
+const {BadRequestEventsError} = require('./eventsErrors');
 
 module.exports = async (model, errorMessage) => {
     try {
@@ -13,9 +13,6 @@ module.exports = async (model, errorMessage) => {
             `${errorMessage} ${reason}` :
             reason;
 
-        throw new EventsErrorBase({
-            status: 400,
-            message
-        });
+        throw new BadRequestEventsError(message);
     }
 };

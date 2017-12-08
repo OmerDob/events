@@ -1,5 +1,5 @@
 const logger = require('./logger');
-const {EventsErrorBase} = require('./eventsErrors');
+const {EventsError, GeneralEventsError} = require('./eventsErrors');
 
 const catchErrors = (action) => {
     return function (req, res, next) {
@@ -24,7 +24,7 @@ catchErrors.async = (asyncAction) => {
 const handleError = (error, next) => {
     logger.error(error);
     
-    next(error instanceof EventsErrorBase ? error : new EventsErrorBase());
+    next(error instanceof EventsError ? error : new GeneralEventsError());
 };
 
 module.exports = catchErrors;
